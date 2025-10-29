@@ -1,0 +1,10 @@
+[project]
+name = "Assignment_5"
+version = "0.1.0"
+dependencies = [
+    "scikit-learn==1.6.1",
+    "fastapi",
+    "uvicorn",
+    "pandas",
+    "numpy",
+]
