@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import uv
 import sklearn as sk
 
 import pickle
@@ -11,9 +10,6 @@ model_file = 'pipeline_v1.bin'
 
 with open(model_file, 'rb') as f_in:
     dv,model = pickle.load(f_in)
-
-
-dv, model
 
 
 record = {
