@@ -18,7 +18,6 @@ class ClientData(BaseModel):
     lead_source: str = Field(..., description="organic_search")
     number_of_courses_viewed: int = Field(..., ge=0, description= "Number of courses viewed")
     annual_income: float = Field(..., ge=0, description="Annual income")
-    
 @app.get("/")
 async def root():
     return{"message": "Welcome to the Logistic Regression Model API. Use the /score endpoint to get predictions."}
