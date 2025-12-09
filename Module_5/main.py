@@ -46,7 +46,4 @@ def score_client(payload: ClientData): # type: ignore
         # Provide a clean error message to the client.
         raise HTTPException(status_code=400, detail=f"Inference failed: {e}")
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
- 
+
