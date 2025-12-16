@@ -1,0 +1,66 @@
+Module_10 
+The practice can be found in the homework folder
+
+
+What’s happening
+Your subscription-service is of type LoadBalancer.
+
+In cloud providers (AWS, GCP, Azure), Kubernetes provisions an external load balancer and assigns an EXTERNAL-IP.
+
+But in kind (local Kubernetes), there is no cloud load balancer, so the EXTERNAL-IP stays <pending>.
+
+That’s why you can’t reach your service externally.
+
+✅ Fix for kind
+Since you’re running on kind, you should use NodePort or port-forwarding, not LoadBalancer.
+
+Edit your service.yaml to use NodePort:
+
+yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: subscription-service
+spec:
+  type: NodePort
+  selector:
+    app: subscription
+  ports:
+    - port: 9696        # service port
+      targetPort: 9696  # container port
+      nodePort: 30000   # external port (between 30000–32767)
+Apply the change:
+
+bash
+kubectl apply -f service.yaml
+Check services again:
+
+bash
+kubectl get svc
+You should now see:
+
+Code
+NAME                   TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+subscription-service   NodePort   10.96.xxx.xxx  <none>        9696:30000/TCP   1m
+Access your app:
+
+Either via NodePort:
+
+bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"year":2010,"mileage":100000,"make":"ford","model":"fusion"}' \
+  http://localhost:30000/predict
+Or via port-forward:
+
+bash
+kubectl port-forward service/subscription-service 8080:9696
+Then test at http://localhost:8080/predict.
+
+⚡ Summary:
+
+LoadBalancer won’t work in kind → switch to NodePort or use port-forward.
+
+Once you do this, you’ll be able to hit your prediction endpoint locally.
+
+👉 Do you want me to also show you how to simulate CPU load so your HPA can actually scale the subscription deployment up to multiple Pods?
